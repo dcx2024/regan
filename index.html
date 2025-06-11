@@ -1,198 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        
-        .candidate {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .candidate:hover {
-            border-color: #aaa;
-        }
-        
-        .candidate.selected {
-            border-color: #4CAF50;
-            background-color: #f0fff0;
-        }
-        
-        .candidate img {
-            width: 213px;
-    height: 200px;
-            border-radius: 10%;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-        
-        .vote-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .vote-btn:hover {
-            background-color: #45a049;
-        }
-        
-        .vote-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        .confirmation {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #dff0d8;
-            color: #3c763d;
-            border-radius: 5px;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voting System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .candidate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      margin: 10px 0;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .candidate:hover {
+      border-color: #aaa;
+    }
+
+    .candidate.selected {
+      border-color: #4CAF50;
+      background-color: #f0fff0;
+    }
+
+    .candidate img {
+      width: 213px;
+      height: 200px;
+      border-radius: 10%;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+
+    .vote-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .vote-btn:hover {
+      background-color: #45a049;
+    }
+
+    .vote-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    .confirmation {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #dff0d8;
+      color: #3c763d;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-    <form id="votingForm">
-        <h1>Please select a candidate</h1>
-        
-        <div class="candidate">
-            <img src="/images/candidate 1.jpg" alt="Candidate 1">
-            <div>
-                <h3>Diva Aisha Olayinka Kadir</h3>
-                <input type="radio" name="candidate" value="1" id="candidate1">
-                <label for="candidate1">Select</label>
-            </div>
-        </div>
-        
-        <div class="candidate">
-            <img src="/images/candidate 2.jpg" alt="Candidate 2">
-            <div>
-                <h3>Diva Khadeejah Kofoworola Oyewole</h3>
-            
-                <input type="radio" name="candidate" value="2" id="candidate2">
-                <label for="candidate2">Select</label>
-            </div>
-        </div>
-        
-       
-        <button type="button" id="voteBtn" class="vote-btn" disabled>Submit Vote</button>
-        
-        <div id="confirmation" class="confirmation">
-            Thank you for voting! Your selection has been recorded.
-        </div>
-    </form>
+  <form id="votingForm">
+    <h1>Please select a candidate</h1>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('votingForm');
-            const voteBtn = document.getElementById('voteBtn');
-            const confirmation = document.getElementById('confirmation');
-            const candidates = document.querySelectorAll('.candidate');
-            const radioInputs = document.querySelectorAll('input[type="radio"]');
-            
-            // Add click event to entire candidate div
-            candidates.forEach(candidate => {
-                candidate.addEventListener('click', function(e) {
-                    // Don't do anything if clicking directly on the radio or label
-                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
-                    
-                    // Find the radio input inside this candidate div
-                    const radio = this.querySelector('input[type="radio"]');
-                    if (radio) {
-                        radio.checked = true;
-                        updateSelection();
-                    }
-                });
-            });
-            
-            // Update selection when radio button changes
-            radioInputs.forEach(radio => {
-                radio.addEventListener('change', updateSelection);
-            });
-            
-            function updateSelection() {
-                // Remove selected class from all candidates
-                candidates.forEach(candidate => {
-                    candidate.classList.remove('selected');
-                });
-                
-                // Find selected radio button
-                const selectedRadio = document.querySelector('input[type="radio"]:checked');
-                
-                if (selectedRadio) {
-                    // Add selected class to the parent candidate div
-                    selectedRadio.closest('.candidate').classList.add('selected');
-                    voteBtn.disabled = false;
-                } else {
-                    voteBtn.disabled = true;
-                }
-            }
-            
+    <div class="form-group">
+      <label for="maidenName">Your Maiden Name:</label>
+      <input type="text" id="maidenName" name="maidenName" required placeholder="Enter your maiden name" />
+    </div>
 
- voteBtn.addEventListener('click', async function () {
+    <div class="candidate">
+      <img src="/images/candidate 1.jpg" alt="Candidate 1" />
+      <div>
+        <h3>Diva Aisha Olayinka Kadir</h3>
+        <input type="radio" name="candidate" value="1" id="candidate1" />
+        <label for="candidate1">Select</label>
+      </div>
+    </div>
+
+    <div class="candidate">
+      <img src="/images/candidate 2.jpg" alt="Candidate 2" />
+      <div>
+        <h3>Diva Khadeejah Kofoworola Oyewole</h3>
+        <input type="radio" name="candidate" value="2" id="candidate2" />
+        <label for="candidate2">Select</label>
+      </div>
+    </div>
+
+    <button type="button" id="voteBtn" class="vote-btn" disabled>Submit Vote</button>
+
+    <div id="confirmation" class="confirmation">
+      Thank you for voting! Your selection has been recorded.
+    </div>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const voteBtn = document.getElementById('voteBtn');
+      const confirmation = document.getElementById('confirmation');
+      const candidates = document.querySelectorAll('.candidate');
+      const radioInputs = document.querySelectorAll('input[type="radio"]');
+      const maidenNameInput = document.getElementById('maidenName');
+
+      candidates.forEach(candidate => {
+        candidate.addEventListener('click', function (e) {
+          if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+          const radio = this.querySelector('input[type="radio"]');
+          if (radio) {
+            radio.checked = true;
+            updateSelection();
+          }
+        });
+      });
+
+      radioInputs.forEach(radio => {
+        radio.addEventListener('change', updateSelection);
+      });
+
+      function updateSelection() {
+        candidates.forEach(candidate => candidate.classList.remove('selected'));
         const selectedRadio = document.querySelector('input[type="radio"]:checked');
+        if (selectedRadio) {
+          selectedRadio.closest('.candidate').classList.add('selected');
+          voteBtn.disabled = false;
+        } else {
+          voteBtn.disabled = true;
+        }
+      }
+
+      voteBtn.addEventListener('click', async function () {
+        const selectedRadio = document.querySelector('input[type="radio"]:checked');
+        const maidenName = maidenNameInput.value.trim();
+
+        if (!maidenName) {
+          alert("Please enter your maiden name.");
+          return;
+        }
 
         if (selectedRadio) {
-            const selectedCandidateId = selectedRadio.value;
-            const selectedCandidateName = selectedRadio.closest('.candidate').querySelector('h3').textContent;
+          const selectedCandidateId = selectedRadio.value;
+          const selectedCandidateName = selectedRadio.closest('.candidate').querySelector('h3').textContent;
 
-            try {
-                const response = await fetch('https://regan-r9a0.onrender.com/api/vote', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        candidateId: selectedCandidateId,
-                        candidateName: selectedCandidateName
-                    })
-                });
+          try {
+            const response = await fetch('https://regan-r9a0.onrender.com/api/vote', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                candidateId: selectedCandidateId,
+                candidateName: selectedCandidateName,
+                maidenName: maidenName
+              })
+            });
 
-                const data = await response.json();
+            const data = await response.json();
 
-                if (response.ok) {
-                    confirmation.style.display = 'block';
-                    radioInputs.forEach(radio => radio.disabled = true);
-                    voteBtn.disabled = true;
-                    confirmation.scrollIntoView({ behavior: 'smooth' });
-                    alert('Your vote has been recorded');
-                    console.log('Vote submitted:', data);
-                } else {
-                    alert(data.error || 'Error submitting vote.');
-                }
-            } catch (err) {
-                alert('Failed to connect to server.');
-                console.error(err);
+            if (response.ok) {
+              confirmation.style.display = 'block';
+              radioInputs.forEach(radio => radio.disabled = true);
+              maidenNameInput.disabled = true;
+              voteBtn.disabled = true;
+              confirmation.scrollIntoView({ behavior: 'smooth' });
+              alert('Your vote has been recorded');
+              console.log('Vote submitted:', data);
+            } else {
+              alert(data.error || 'Error submitting vote.');
             }
+          } catch (err) {
+            alert('Failed to connect to server.');
+            console.error(err);
+          }
         }
+      });
     });
-               });
-        
-    </script>
+  </script>
 </body>
 </html>
