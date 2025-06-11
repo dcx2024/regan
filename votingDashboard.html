@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voting Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .candidate {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 20px;
+      margin-bottom: 10px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+      font-size: 18px;
+    }
+    .candidate-name {
+      font-weight: 600;
+    }
+    .vote-count {
+      font-weight: bold;
+      color: #4caf50;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vote Counts Dashboard</h1>
+  <div id="dashboard"></div>
+
+  <script>
+    async function fetchVotes() {
+      try {
+        const response = await fetch('http://localhost:3000/api/votes'); // Adjust if needed
+        if (!response.ok) throw new Error('Failed to fetch vote data');
+        const votes = await response.json();
+
+        const dashboard = document.getElementById('dashboard');
+        dashboard.innerHTML = '';
+
+        if (votes.length === 0) {
+          dashboard.textContent = 'No votes have been cast yet.';
+          return;
+        }
+
+        votes.forEach(({ candidate_id, candidate_name, vote_count }) => {
+          const div = document.createElement('div');
+          div.className = 'candidate';
+          div.innerHTML = `
+            <span class="candidate-name">${candidate_name}</span>
+            <span class="vote-count">${vote_count}</span>
+          `;
+          dashboard.appendChild(div);
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById('dashboard').textContent = 'Error loading vote counts.';
+      }
+    }
+
+    // Load votes on page load
+    window.addEventListener('DOMContentLoaded', fetchVotes);
+
+    // Optional: refresh every 30 seconds
+    setInterval(fetchVotes, 30000);
+  </script>
+</body>
+</html>
+
