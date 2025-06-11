@@ -5,7 +5,7 @@ const voteRoutes = require('./route/voteRoute');
 
 const app = express()
 app.use(express.json())
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '..')));
 
 app.use(cors())
 const authRoutes = require('./route/signUp')
