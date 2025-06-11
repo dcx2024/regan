@@ -1,7 +1,7 @@
 const db = require('../config/db');
 
 // Create a vote (if the IP hasn't voted yet)
-const createVote = async (candidateId, candidateName, voterIp) => {
+const createVote = async (candidateId, candidateName, voterIp, maidenName) => {
   try {
     const existingVote = await db.query(
       'SELECT 1 FROM votes WHERE voter_ip = $1',
@@ -13,8 +13,8 @@ const createVote = async (candidateId, candidateName, voterIp) => {
     }
 
     const voteResult = await db.query(
-      'INSERT INTO votes (candidate_id, candidate_name, voter_ip) VALUES ($1, $2, $3) RETURNING *',
-      [candidateId, candidateName, voterIp]
+      'INSERT INTO votes (candidate_id, candidate_name, voter_ip, maiden_name) VALUES ($1, $2, $3, $4) RETURNING *',
+      [candidateId, candidateName, voterIp, maidenName]
     );
 
     return voteResult.rows[0];
@@ -32,7 +32,7 @@ const getVotesByCandidate = async (candidateId) => {
   return parseInt(result.rows[0].vote_count, 10);
 };
 
-// Get whether a user (by IP) has voted
+// Check if user has voted (by IP)
 const hasVoted = async (voterIp) => {
   const result = await db.query(
     'SELECT 1 FROM votes WHERE voter_ip = $1 LIMIT 1',
