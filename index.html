@@ -166,7 +166,7 @@ voteBtn.addEventListener('click', async function() {
         const selectedCandidateId = selectedRadio.value;
         const selectedCandidateName = selectedRadio.closest('.candidate').querySelector('h3').textContent;
 
-        try {
+        
            const response = await fetch('https://regan-r9a0.onrender.com/api/vote', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -196,10 +196,7 @@ voteBtn.addEventListener('click', async function() {
             } else {
                 alert(data.error || 'Error submitting vote.');
             }
-        } catch (err) {
-            alert('Failed to connect to server.');
-            console.error(err);
-        }
+    
     }
 });
         
