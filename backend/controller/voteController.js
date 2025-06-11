@@ -39,11 +39,15 @@ const checkIfVoted = async (req, res) => {
 
 // Submit a vote
 const castVote = async (req, res) => {
-  const { candidateId, candidateName } = req.body;
+  const { candidateId, candidateName, maidenName } = req.body;
   const voterIp = req.ip || req.connection.remoteAddress;
 
+  if (!maidenName || maidenName.trim() === '') {
+    return res.status(400).json({ error: 'Maiden name is required' });
+  }
+
   try {
-    const vote = await createVote(candidateId, candidateName, voterIp);
+    const vote = await createVote(candidateId, candidateName, voterIp, maidenName);
     res.status(201).json({ message: 'Vote recorded', vote });
   } catch (err) {
     res.status(400).json({ error: err.message });
