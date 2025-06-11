@@ -167,16 +167,15 @@ voteBtn.addEventListener('click', async function() {
         const selectedCandidateName = selectedRadio.closest('.candidate').querySelector('h3').textContent;
 
         try {
-            const response = await fetch('http://localhost:3000/api/vote', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    candidateId: selectedCandidateId,
-                    candidateName: selectedCandidateName
-                })
-            });
+           const response = await fetch('https://regan-r9a0.onrender.com/api/vote', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    candidateId: selectedCandidateId,
+    candidateName: selectedCandidateName,
+  }),
+});
+
 
             const data = await response.json();
 
