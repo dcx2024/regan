@@ -26,21 +26,18 @@ const getAllVotes = async (req, res) => {
   }
 };
 
-// Check if an IP has voted
-const checkIfVoted = async (req, res) => {
-  try {
-    const ip = req.ip || req.connection.remoteAddress;
-    const voted = await hasVoted(ip);
-    res.json({ hasVoted: voted });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+const getClientIp = (req) => {
+  const xForwardedFor = req.headers['x-forwarded-for'];
+  if (xForwardedFor) {
+    return xForwardedFor.split(',')[0].trim();
   }
+  return req.socket?.remoteAddress || null;
 };
 
 // Submit a vote
 const castVote = async (req, res) => {
   const { candidateId, candidateName, maidenName } = req.body;
-  const voterIp = req.ip || req.connection.remoteAddress;
+  const voterIp = getClientIp(req);
 
   if (!maidenName || maidenName.trim() === '') {
     return res.status(400).json({ error: 'Maiden name is required' });
@@ -51,6 +48,17 @@ const castVote = async (req, res) => {
     res.status(201).json({ message: 'Vote recorded', vote });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+};
+
+// Check if an IP has voted
+const checkIfVoted = async (req, res) => {
+  try {
+    const ip = getClientIp(req);
+    const voted = await hasVoted(ip);
+    res.json({ hasVoted: voted });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
