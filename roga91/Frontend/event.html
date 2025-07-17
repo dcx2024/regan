@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="event.css">
+  <link rel="icon" type="image/x-icon" href="images/logo.webp"> 
+  <title>Upcoming Events</title>
+</head>
+<body>
+  <header>
+    <img src="images/logo.webp" alt="Reagan High Logo" class="logo">
+
+    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+
+    <nav id="nav-menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="#">Gallery</a>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=rogaset91@gmail.com" target="_blank">Contact Us</a>
+      <a href="#">Give to ROGA91</a>
+      <button class="header-cta">Get Involved</button>
+    </nav>
+
+    <h1>Upcoming Events</h1>
+  </header>
+
+  <div class="container">
+
+    <div class="event">
+      <h2>AGM / Inauguration</h2>
+      <p class="date">
+        <img src="icons/calendar (2).png" alt="Calendar icon" class="icon">
+        27th July 2025
+      </p>
+      <p>
+        Join us for the inauguration of the newly elected executives and our annual reunion celebration.
+      </p>
+    </div>
+
+    <div class="event">
+      <img src="images/event memorial.webp" alt="An upcoming event for ROGA91" class="event-img">
+
+      <h2>Memorial 2025</h2>
+
+      <p class="date">
+        <img src="icons/calendar (2).png" alt="Calendar icon" class="icon">
+        10th August 2025
+      </p>
+
+      <p class="date">
+        <img src="icons/clock (2).png" alt="Clock icon" class="icon">
+        4 PM
+      </p>
+
+      <p>Join us as we celebrate the lives of our beloved sisters who have gone before us.</p>
+    </div>
+
+  </div>
+
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

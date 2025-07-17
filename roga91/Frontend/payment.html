@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROGA 91 - Payment Portal</title>
+    <link rel="stylesheet" href="payment.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">ROGA 91</h1>
+            <p class="subtitle">Make a Payment - Donations & Dues</p>
+        </header>
+
+        <main class="main-content">
+            <div class="payment-card">
+                <div class="card-header">
+                    <h2>Payment Portal</h2>
+                    
+                    <!-- Tab Navigation -->
+                    <div class="tab-container">
+                        <button class="tab-btn active" data-tab="donation">
+                            💝 Donation
+                        </button>
+                        <button class="tab-btn" data-tab="dues">
+                            💳 Dues
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Payment Form -->
+                    <form id="paymentForm" class="payment-form">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount (₦) *</label>
+                            <input type="number" id="amount" name="amount" required min="100" placeholder="Enter amount in Naira">
+                        </div>
+
+                        <!-- Payment Type Info -->
+                        <div class="info-box" id="paymentInfo">
+                            <p id="infoText">💝 Your donation will support ROGA 91 activities and programs.</p>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div class="error-message" id="errorMessage" style="display: none;"></div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <span id="btnText">Pay ₦0 - Donate</span>
+                            <div class="loading-spinner" id="loadingSpinner" style="display: none;"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Secured by Paystack • SSL Encrypted</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
