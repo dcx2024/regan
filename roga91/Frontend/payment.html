@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROGA 91 - Payment Portal</title>
     <link rel="stylesheet" href="payment.css">
+    <link rel="icon" type="image/x-icon" href="images/logo.webp">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -54,6 +55,17 @@
                         <div class="form-group">
                             <label for="amount">Amount (₦) *</label>
                             <input type="number" id="amount" name="amount" required min="100" placeholder="Enter amount in Naira">
+                        </div>
+                          <!-- Description Field - Only for Donations -->
+                        <div class="form-group" id="descriptionGroup">
+                            <label for="description">Description/Purpose</label>
+                            <textarea 
+                                id="description" 
+                                name="description" 
+                                rows="3" 
+                                 placeholder="Please describe the purpose of your donation (e.g., Support for community programs, Educational initiatives, General donation, etc.)"
+                            ></textarea>
+                           <small class="field-hint">Help us understand how you'd like your donation to be used (optional).</small>
                         </div>
 
                         <!-- Payment Type Info -->

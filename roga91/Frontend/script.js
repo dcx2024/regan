@@ -6,6 +6,8 @@ let isLoading = false
 const tabButtons = document.querySelectorAll(".tab-btn")
 const paymentForm = document.getElementById("paymentForm")
 const amountInput = document.getElementById("amount")
+const descriptionGroup = document.getElementById("descriptionGroup")
+const descriptionInput = document.getElementById("description")
 const submitBtn = document.getElementById("submitBtn")
 const btnText = document.getElementById("btnText")
 const loadingSpinner = document.getElementById("loadingSpinner")
@@ -18,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeEventListeners()
   updatePaymentInfo()
   updateSubmitButton()
+  updateButtonStyle()
 })
 
 // Event listeners
@@ -32,6 +35,9 @@ function initializeEventListeners() {
 
   // Amount input change
   amountInput.addEventListener("input", updateSubmitButton)
+
+  // Description input change
+  descriptionInput.addEventListener("input", validateForm)
 
   // Real-time form validation
   const inputs = paymentForm.querySelectorAll("input[required]")
@@ -56,13 +62,39 @@ function handleTabSwitch(event) {
   updatePaymentInfo()
   updateSubmitButton()
   updateButtonStyle()
+  toggleDescriptionField()
   hideError()
+}
+
+// Toggle description field visibility based on payment type
+function toggleDescriptionField() {
+  const isDonation = currentPaymentType === "donation"
+
+  if (isDonation) {
+    descriptionGroup.style.display = "flex";
+    descriptionGroup.classList.add("show")
+    descriptionGroup.classList.remove("hide")
+    descriptionInput.required = false // Optional for donations
+  } else {
+    descriptionGroup.classList.add("hide")
+    descriptionGroup.classList.remove("show")
+    descriptionInput.required = false
+    descriptionInput.value = "" // Clear description when switching away from donations
+
+    // Hide after animation
+    setTimeout(() => {
+      if (currentPaymentType !== "donation") {
+        descriptionGroup.style.display = "none"
+      }
+    }, 300)
+  }
 }
 
 // Update payment information based on selected type
 function updatePaymentInfo() {
   const infoMessages = {
-    donation: "💝 Your donation will support ROGA 91 activities and programs.",
+    donation:
+      "💝 Your donation will support ROGA 91 activities and programs. Please provide a description of how you'd like your donation to be used.",
     roga91_dues: "🏛️ Your ROGA 91 dues payment will maintain your local chapter membership.",
     roga_national_dues: "🇳🇬 Your ROGA National dues payment will maintain your national membership status.",
   }
@@ -109,6 +141,7 @@ function validateForm() {
   const phone = formData.get("phone")
   const amount = formData.get("amount")
 
+  // Basic validation - description is optional for donations
   const isValid = name && email && phone && amount && Number.parseInt(amount) >= 100
   submitBtn.disabled = !isValid || isLoading
 
@@ -131,6 +164,14 @@ async function handleFormSubmit(event) {
     phone: formData.get("phone"),
     amount: Number.parseInt(formData.get("amount")),
     type: currentPaymentType,
+  }
+
+  // Add description for donations (optional)
+  if (currentPaymentType === "donation") {
+    const description = formData.get("description")
+    if (description && description.trim().length > 0) {
+      paymentData.description = description.trim()
+    }
   }
 
   // Validate amount
@@ -208,9 +249,4 @@ document.addEventListener("visibilitychange", () => {
     // Reset form state
     setLoadingState(false)
   }
-})
-
-// Initialize button style on page load
-document.addEventListener("DOMContentLoaded", () => {
-  updateButtonStyle()
 })

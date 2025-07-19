@@ -7,7 +7,7 @@ require("dotenv").config();
  */
 const initializePayment = async (req, res) => {
   try {
-    const { name, email, phone, amount, type } = req.body;
+    const { name, email, phone, amount, type, description } = req.body;
 
     if (!name || !email || !phone || !amount || !type) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -21,30 +21,58 @@ const initializePayment = async (req, res) => {
       return res.status(400).json({ error: "Minimum amount is ₦100" });
     }
 
-let subaccount
+    let subaccount;
     switch (type) {
       case "donation":
-        subaccount = process.env.PAYSTACK_DONATION_SUBACCOUNT
-        break
+        subaccount = process.env.PAYSTACK_DONATION_SUBACCOUNT;
+        break;
       case "roga91_dues":
-        subaccount = process.env.PAYSTACK_ROGA91_DUES_SUBACCOUNT
-        break
+        subaccount = process.env.PAYSTACK_ROGA91_DUES_SUBACCOUNT;
+        break;
       case "roga_national_dues":
-        subaccount = process.env.PAYSTACK_ROGA_NATIONAL_DUES_SUBACCOUNT
-        break
+        subaccount = process.env.PAYSTACK_ROGA_NATIONAL_DUES_SUBACCOUNT;
+        break;
       default:
-        return res.status(400).json({ error: "Invalid payment type" })
+        return res.status(400).json({ error: "Invalid payment type" });
     }
 
     const reference = `ROGA91_${type.toUpperCase()}_${Date.now()}_${Math.random()
       .toString(36)
       .substr(2, 9)}`;
 
-      // Prepare display names for payment types
     const displayNames = {
       donation: "Donation",
       roga91_dues: "ROGA 91 Dues Payment",
       roga_national_dues: "ROGA National Dues Payment",
+    };
+
+    // Prepare custom fields for Paystack
+    const customFields = [
+      {
+        display_name: "Payment Type",
+        variable_name: "payment_type",
+        value: displayNames[type],
+      },
+      {
+        display_name: "Member Name",
+        variable_name: "member_name",
+        value: name,
+      },
+    ];
+
+    const isDonation = type === "donation";
+    const trimmedDescription =
+      isDonation && description && description.trim().length > 0
+        ? description.trim()
+        : null;
+
+    // If it's a donation and description exists, add it to custom fields
+    if (trimmedDescription) {
+      customFields.push({
+        display_name: "Donation Purpose",
+        variable_name: "donation_purpose",
+        value: trimmedDescription,
+      });
     }
 
     const paystackPayload = JSON.stringify({
@@ -57,18 +85,8 @@ let subaccount
         email,
         phone,
         type,
-        custom_fields: [
-          {
-            display_name: "Payment Type",
-            variable_name: "payment_type",
-             value: displayNames[type],
-          },
-          {
-            display_name: "Member Name",
-            variable_name: "member_name",
-            value: name,
-          },
-        ],
+        description: trimmedDescription,
+        custom_fields: customFields,
       },
       callback_url: `${process.env.BASE_URL}/api/payment/verify?reference=${reference}`,
     });
@@ -97,8 +115,16 @@ let subaccount
 
           if (response.status) {
             await db.query(
-              "INSERT INTO payments (name, email, phone, amount, type, reference) VALUES ($1, $2, $3, $4, $5, $6)",
-              [name, email, phone, amount, type, reference]
+              "INSERT INTO payments (name, email, phone, amount, type, description, reference) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+              [
+                name,
+                email,
+                phone,
+                amount,
+                type,
+                isDonation ? trimmedDescription : null,
+                reference,
+              ]
             );
 
             res.json({
@@ -134,15 +160,15 @@ let subaccount
  */
 const verifyPayment = async (req, res) => {
   try {
-      let reference = req.query.reference;
+    let reference = req.query.reference;
     if (Array.isArray(reference)) {
-      reference = reference[0]; 
-       }
+      reference = reference[0];
+    }
 
     if (!reference) {
       return res.redirect("/failure.html");
     }
-console.log("Verifying reference:", reference);
+
     const options = {
       hostname: "api.paystack.co",
       port: 443,
@@ -163,7 +189,6 @@ console.log("Verifying reference:", reference);
       paystackRes.on("end", async () => {
         try {
           const result = JSON.parse(data);
-          console.log(result)
 
           if (result.status && result.data.status === "success") {
             await db.query(
