@@ -11,6 +11,7 @@ const btnText = document.getElementById("btnText")
 const loadingSpinner = document.getElementById("loadingSpinner")
 const errorMessage = document.getElementById("errorMessage")
 const infoText = document.getElementById("infoText")
+const paymentInfo = document.getElementById("paymentInfo")
 
 // Initialize the application
 document.addEventListener("DOMContentLoaded", () => {
@@ -54,6 +55,7 @@ function handleTabSwitch(event) {
   // Update UI
   updatePaymentInfo()
   updateSubmitButton()
+  updateButtonStyle()
   hideError()
 }
 
@@ -61,17 +63,42 @@ function handleTabSwitch(event) {
 function updatePaymentInfo() {
   const infoMessages = {
     donation: "💝 Your donation will support ROGA 91 activities and programs.",
-    dues: "💳 Your dues payment will be processed for membership benefits.",
+    roga91_dues: "🏛️ Your ROGA 91 dues payment will maintain your local chapter membership.",
+    roga_national_dues: "🇳🇬 Your ROGA National dues payment will maintain your national membership status.",
   }
 
+  // Update info text
   infoText.textContent = infoMessages[currentPaymentType]
+
+  // Update info box styling
+  paymentInfo.className = "info-box"
+  if (currentPaymentType === "roga91_dues") {
+    paymentInfo.classList.add("roga91")
+  } else if (currentPaymentType === "roga_national_dues") {
+    paymentInfo.classList.add("national")
+  }
 }
 
 // Update submit button text and state
 function updateSubmitButton() {
   const amount = amountInput.value || "0"
-  const actionText = currentPaymentType === "donation" ? "Donate" : "Pay Dues"
-  btnText.textContent = `Pay ₦${amount} - ${actionText}`
+  const actionTexts = {
+    donation: "Donate",
+    roga91_dues: "Pay ROGA 91 Dues",
+    roga_national_dues: "Pay National Dues",
+  }
+
+  btnText.textContent = `Pay ₦${amount} - ${actionTexts[currentPaymentType]}`
+}
+
+// Update button styling based on payment type
+function updateButtonStyle() {
+  submitBtn.className = "submit-btn"
+  if (currentPaymentType === "roga91_dues") {
+    submitBtn.classList.add("roga91")
+  } else if (currentPaymentType === "roga_national_dues") {
+    submitBtn.classList.add("national")
+  }
 }
 
 // Form validation
@@ -181,4 +208,9 @@ document.addEventListener("visibilitychange", () => {
     // Reset form state
     setLoadingState(false)
   }
+})
+
+// Initialize button style on page load
+document.addEventListener("DOMContentLoaded", () => {
+  updateButtonStyle()
 })

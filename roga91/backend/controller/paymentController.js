@@ -13,7 +13,7 @@ const initializePayment = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    if (!["donation", "dues"].includes(type)) {
+    if (!["donation", "roga91_dues", "roga_national_dues"].includes(type)) {
       return res.status(400).json({ error: "Invalid payment type" });
     }
 
@@ -21,14 +21,31 @@ const initializePayment = async (req, res) => {
       return res.status(400).json({ error: "Minimum amount is ₦100" });
     }
 
-    const subaccount =
-      type === "donation"
-        ? process.env.PAYSTACK_DONATION_SUBACCOUNT
-        : process.env.PAYSTACK_DUES_SUBACCOUNT;
+let subaccount
+    switch (type) {
+      case "donation":
+        subaccount = process.env.PAYSTACK_DONATION_SUBACCOUNT
+        break
+      case "roga91_dues":
+        subaccount = process.env.PAYSTACK_ROGA91_DUES_SUBACCOUNT
+        break
+      case "roga_national_dues":
+        subaccount = process.env.PAYSTACK_ROGA_NATIONAL_DUES_SUBACCOUNT
+        break
+      default:
+        return res.status(400).json({ error: "Invalid payment type" })
+    }
 
     const reference = `ROGA91_${type.toUpperCase()}_${Date.now()}_${Math.random()
       .toString(36)
       .substr(2, 9)}`;
+
+      // Prepare display names for payment types
+    const displayNames = {
+      donation: "Donation",
+      roga91_dues: "ROGA 91 Dues Payment",
+      roga_national_dues: "ROGA National Dues Payment",
+    }
 
     const paystackPayload = JSON.stringify({
       email,
@@ -44,7 +61,12 @@ const initializePayment = async (req, res) => {
           {
             display_name: "Payment Type",
             variable_name: "payment_type",
-            value: type === "donation" ? "Donation" : "Dues Payment",
+             value: displayNames[type],
+          },
+          {
+            display_name: "Member Name",
+            variable_name: "member_name",
+            value: name,
           },
         ],
       },
