@@ -1,0 +1,51 @@
+name: CI/CD to VPS (Regan App)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build & Deploy app to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 📦 Install Dependencies
+        run: npm install
+
+      - name: 🚀 Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            echo "📁 Creating app directory..."
+            mkdir -p ${{ secrets.APP_DIR }}
+            cd ${{ secrets.APP_DIR }}
+
+            if [ -d ".git" ]; then
+              echo "🔄 Pulling latest code..."
+              git reset --hard
+              git pull
+            else
+              echo "⬇️ Cloning repository..."
+              git clone https://github.com/${{ github.repository }} .
+            fi
+
+            echo "🔐 Setting environment variables..."
+            echo "DATABASE_URL=${{ secrets.DB_URL }}" > .env
+            echo "PORT=3000" >> .env
+
+            echo "📦 Installing production dependencies..."
+            npm install --omit=dev
+
+            echo "🚀 Restarting app with PM2..."
+            pm2 start npm --name "regan" -- start || pm2 restart regan
+            pm2 save
