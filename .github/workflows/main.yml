@@ -51,12 +51,12 @@ jobs:
 
             cd backend
 
-            echo "🚀 Managing app with PM2..."
+            echo "🚀 Managing app with PM2 (Cluster Mode)..."
             if pm2 list | grep -q roga91; then
               echo "🔄 App 'roga91' exists, restarting..."
               pm2 restart roga91
             else
-              echo "🚀 Starting app 'roga91'..."
-              pm2 start server.js --name "roga91"
+              echo "🚀 Starting app 'roga91' in cluster mode..."
+              pm2 start server.js --name "roga91" -i 2
             fi
             pm2 save
