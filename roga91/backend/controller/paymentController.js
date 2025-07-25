@@ -1,7 +1,6 @@
 const https = require("https");
 const db = require("../config/db");
-require("dotenv").config();
-
+require('dotenv').config({ path: path.resolve(__dirname, '/root/regan/roga91/.env') });
 /**
  * Initializes a payment using Paystack and stores it in the database.
  */
