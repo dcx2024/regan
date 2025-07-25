@@ -49,6 +49,8 @@ jobs:
             cd roga91
             npm install --omit=dev
 
+            cd backend
+
             echo "🚀 Managing app with PM2..."
             if pm2 list | grep -q roga91; then
               echo "🔄 App 'roga91' exists, restarting..."
