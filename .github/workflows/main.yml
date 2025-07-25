@@ -50,8 +50,7 @@ jobs:
             npm install --omit=dev
 
             echo "🚀 Managing app with PM2..."
-            pm2 describe roga91 > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
+            if pm2 list | grep -q roga91; then
               echo "🔄 App 'roga91' exists, restarting..."
               pm2 restart roga91
             else
