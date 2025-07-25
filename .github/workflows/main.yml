@@ -50,5 +50,5 @@ jobs:
             npm install --omit=dev
 
             echo "🚀 Restarting app with PM2..."
-            pm2 start npm --name "regan" -- start || pm2 restart regan
+            pm2 start npm --name "roga91" -- start || pm2 restart roga91
             pm2 save
