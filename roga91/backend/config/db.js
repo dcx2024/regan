@@ -1,23 +1,19 @@
-const {Client} = require('pg')
-require ('dotenv').config()
+const { Client } = require('pg');
+const path = require('path');
+
+// Load environment variables from ../.env
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const db = new Client({
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_NAME
-})
-
-console.log({
   user: process.env.DB_USER,
-  password: typeof process.env.DB_PASSWORD,
+  password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_NAME
 });
 
-
-db.connect().then(()=>console.log('connected to postgresql')).catch((err)=>console.error('Database Connection error',err))
+db.connect()
+  .then(() => console.log('✅ Connected to PostgreSQL'))
+  .catch((err) => console.error('❌ Database Connection error:', err));
 
 module.exports = db;
