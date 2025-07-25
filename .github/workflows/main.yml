@@ -55,6 +55,6 @@ jobs:
               pm2 restart roga91
             else
               echo "🚀 Starting app 'roga91'..."
-              pm2 start npm --name "roga91" -- start
+              pm2 start server.js --name "roga91"
             fi
             pm2 save
