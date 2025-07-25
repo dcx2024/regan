@@ -49,6 +49,13 @@ jobs:
             cd roga91
             npm install --omit=dev
 
-            echo "🚀 Restarting app with PM2..."
-            pm2 start npm --name "roga91" -- start || pm2 restart roga91
+            echo "🚀 Managing app with PM2..."
+            pm2 describe roga91 > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+              echo "🔄 App 'roga91' exists, restarting..."
+              pm2 restart roga91
+            else
+              echo "🚀 Starting app 'roga91'..."
+              pm2 start npm --name "roga91" -- start
+            fi
             pm2 save
