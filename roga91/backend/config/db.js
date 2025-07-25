@@ -9,6 +9,15 @@ const db = new Client({
     database: process.env.DB_NAME
 })
 
+console.log({
+  user: process.env.DB_USER,
+  password: typeof process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME
+});
+
+
 db.connect().then(()=>console.log('connected to postgresql')).catch((err)=>console.error('Database Connection error',err))
 
 module.exports = db;
