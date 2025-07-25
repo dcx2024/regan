@@ -46,6 +46,7 @@ jobs:
             echo "PORT=3000" >> .env
 
             echo "📦 Installing production dependencies..."
+            cd roga91
             npm install --omit=dev
 
             echo "🚀 Restarting app with PM2..."
