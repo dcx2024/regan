@@ -232,6 +232,55 @@
         color: var(--text-gray);
     }
 
+    .ex{
+        padding-right: 11vw;
+        padding-left: 11vw;
+    }
+
+    .card {
+        height:105vh;
+        width:25%;
+        background-color: white;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card img {
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+        max-height: 400px; /* Optional: limit max height */
+        border-radius: 10px;
+        margin-bottom: 15px;
+        object-fit: contain; /* Crop to fill if needed */
+        /* Placeholder background */
+    }
+
+    .card h5 {
+        margin-bottom: 5px;
+        color: var(--blue);
+    }
+
+    .card span {
+        background-color: var(--wine);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    .card p {
+        margin-top: 10px;
+        font-size: 14px;
+        color: var(--text-gray);
+    }
+
     .electoral{
         
         padding: 50px 20px;
@@ -336,6 +385,15 @@
     .cards{
     height:105vh
 }  
+
+
+        .card p {
+        font-size: 14px;
+    }
+    .card{
+    height:105vh;
+    width:100%
+}  
     }   
 
     @media (max-width: 480px) {
@@ -352,7 +410,16 @@
     }
 
 .cards{
-    height:102vh
+    height:105vh
+}   
+
+  .card p {
+        font-size: 12px;
+    }
+
+.card{
+    height:95vh;
+    width: 100%;
 }   
     }   
 
