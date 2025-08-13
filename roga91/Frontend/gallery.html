@@ -97,6 +97,12 @@
         </div>
     </section>
     <script>
+
+        document.addEventListener('contextmenu', function (e) {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+      }
+    });
         const toggle = document.getElementById('menu-toggle');
         const navMenu = document.getElementById('nav-menu');
 
