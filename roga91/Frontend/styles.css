@@ -429,5 +429,33 @@
             font-size: 11px;
         }
     }
+/* Prevent dragging of images */
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Overlay blocker for image cards */
+.cards {
+  position: relative;
+}
+
+.cards img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none; /* disables click interaction */
+}
+
+.cards::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 1;
+}
 
    
